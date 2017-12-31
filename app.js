@@ -9,8 +9,7 @@ const mainState = {
   },
 
   create: function () {
-    game.stage.backgroundColor = '#2d2d2d';
-
+    game.stage.backgroundColor = '#88C070';
     //CREATING THE SHIP
     this.ship = game.add.sprite(game.width/2, game.height/2, 'ship');
     game.physics.enable(this.ship, Phaser.Physics.ARCADE);
@@ -24,26 +23,25 @@ const mainState = {
     this.aliens = game.add.group();
     this.aliens.enableBody = true;
     this.aliens.physicsBodyType = Phaser.Physics.ARCADE;
-
+	alienPos = 0;
     for (let i = 0; i < 1; i++) {
       this.aliens.create(0, game.height, 'enemy');
       this.aliens.create(game.width, 0, 'enemy')
       this.aliens.create(game.width, game.height, 'enemy');
       this.aliens.create(0, 0, 'enemy')
     }
-
+    //CREATING THE BULLET GROUP
     this.bullets = game.add.group();
     this.bullets.enableBody = true;
     this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
-
-    for (let i = 0; i < 20; i++) {
+    //POPULATING THE BULLET GROUP
+    for (let i = 0; i < 40; i++) {
       let b = this.bullets.create(0, 0, 'bullet');
       b.exists = false;
       b.visible = false;
       b.checkWorldBounds = true;
       b.events.onOutOfBounds.add((bullet) => { bullet.kill(); });
     }
-
     this.bulletTime = 0;
 
     this.explosion = this.game.add.sprite(0, 0, 'explode');
@@ -86,14 +84,13 @@ const mainState = {
     this.boundries(this.ship);
     //FIRE GUN
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-       this.fire();
+       this.fire(Math.random()/4);
     }
   },
 
   shipMove: function(){
     if (this.cursors.up.isDown){
       let  i = game.physics.arcade.accelerationFromRotation(this.ship.rotation, 400, this.ship.body.acceleration);
-      console.log(i);
     }else{
       this.ship.body.acceleration.set(0);
     }
@@ -120,14 +117,15 @@ const mainState = {
     }
   },
 
-  fire: function () {
+  fire: function (angle) {
       if (game.time.now > this.bulletTime) {
+        game.camera.shake(0.005, 100);
         this.fireSound.play();
         let bullet = this.bullets.getFirstExists(false);
         if (bullet) {
-          bullet.reset(this.ship.x, this.ship.y);
+          bullet.reset(this.ship.x , this.ship.y);
           bullet.rotation = this.ship.rotation;
-          game.physics.arcade.velocityFromRotation(this.ship.rotation, 1000, bullet.body.velocity);
+          game.physics.arcade.velocityFromRotation(this.ship.rotation + angle, 1000, bullet.body.velocity);
           this.bulletTime = game.time.now + 150;
         }
       }
@@ -137,9 +135,11 @@ const mainState = {
     this.score = this.score + 10;
     bullet.kill();
     enemy.kill();
+    game.camera.shake(0.02, 300);
     //Create new enemies
-    this.aliens.create(0, game.height, 'enemy');
-    this.aliens.create(game.width, 0, 'enemy')
+	alienPos = (Math.random() * 800) + 1
+    this.aliens.create(alienPos, -50, 'enemy');
+    this.aliens.create(alienPos, game.height, 'enemy')
     //Check if game over
     if (this.aliens.countLiving() === 0) {
       this.score = this.score + 100;
