@@ -68,7 +68,6 @@ const mainState = {
   },
 
   update: function () {
-	
     game.physics.arcade.overlap(this.bullets, this.aliens, this.hit, null, this);
     game.physics.arcade.overlap(this.aliens, this.ship, this.shipGotHit, null, this);
     this.aliens.forEach(
@@ -76,12 +75,14 @@ const mainState = {
         //Asteroid Movement & Rotation
         alienVelocityY = this.ship.body.position.y - alien.body.position.y;
         alienVelocityX =  this.ship.body.position.x - alien.body.position.x;
-		alien.body.rotation += alien.body.velocity.y / 100;
+		alien.body.rotation += alien.body.velocity.y /100;
         alien.body.velocity.y += alienVelocityY/300;
         alien.body.velocity.x += alienVelocityX/300;
-      },
+		alien.anchor.x = 0.5;
+		alien.anchor.y = 0.5
+	  }
     );
-    //SHIP MOVEMENT
+	//SHIP MOVEMENT
     this.shipMove();
     this.boundries(this.ship);
     //FIRE GUN
@@ -136,6 +137,7 @@ const mainState = {
         }
       }
     },
+  
   hit: function (bullet, enemy) {
     this.score = this.score + 10;
     bullet.kill();
