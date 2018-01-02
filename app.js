@@ -18,7 +18,7 @@ const mainState = {
     game.physics.enable(this.ship, Phaser.Physics.ARCADE);
     this.ship.body.drag.set(100);
     this.ship.body.maxVelocity.set(200);
-
+	shipV = 0;
     //CREATING THE ALIEN GROUP
     this.aliens = game.add.group();
     this.aliens.enableBody = true;
@@ -59,7 +59,7 @@ const mainState = {
     }
 
     this.score = 0;
-    this.scoreDisplay = game.add.text(200, 20, `Score: ${this.score} \nHighScore: ${this.highScore}`, { font: '30px Arial', fill: '#ffffff' });
+    this.scoreDisplay = game.add.text(50, 50, `Score: ${this.score} \nHighScore: ${this.highScore}`, { font: '16px Courier', fill: '#081820' });
 
     this.fireSound = game.add.audio('fire');
 
@@ -68,13 +68,15 @@ const mainState = {
   },
 
   update: function () {
+	
     game.physics.arcade.overlap(this.bullets, this.aliens, this.hit, null, this);
     game.physics.arcade.overlap(this.aliens, this.ship, this.shipGotHit, null, this);
     this.aliens.forEach(
       (alien) => {
-        //Asteroid Movement
+        //Asteroid Movement & Rotation
         alienVelocityY = this.ship.body.position.y - alien.body.position.y;
         alienVelocityX =  this.ship.body.position.x - alien.body.position.x;
+		alien.body.rotation += alien.body.velocity.y / 100;
         alien.body.velocity.y += alienVelocityY/300;
         alien.body.velocity.x += alienVelocityX/300;
       },
@@ -85,14 +87,16 @@ const mainState = {
     //FIRE GUN
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
        this.fire(Math.random()/4);
-    }
+	}
   },
 
   shipMove: function(){
     if (this.cursors.up.isDown){
-      let  i = game.physics.arcade.accelerationFromRotation(this.ship.rotation, 400, this.ship.body.acceleration);
+	  shipV = 400;
+      let  i = game.physics.arcade.accelerationFromRotation(this.ship.rotation, shipV, this.ship.body.acceleration);
     }else{
-      this.ship.body.acceleration.set(0);
+	  shipV = 0;
+      this.ship.body.acceleration.set(shipV);
     }
     if (this.cursors.left.isDown) {
       this.ship.body.angularVelocity = -200;
@@ -121,6 +125,8 @@ const mainState = {
       if (game.time.now > this.bulletTime) {
         game.camera.shake(0.005, 100);
         this.fireSound.play();
+		shipV = -200;
+		game.physics.arcade.accelerationFromRotation(this.ship.rotation, shipV, this.ship.body.acceleration);
         let bullet = this.bullets.getFirstExists(false);
         if (bullet) {
           bullet.reset(this.ship.x , this.ship.y);
@@ -130,7 +136,6 @@ const mainState = {
         }
       }
     },
-
   hit: function (bullet, enemy) {
     this.score = this.score + 10;
     bullet.kill();
