@@ -9,7 +9,8 @@ const mainState = {
   },
 
   create: function () {
-    game.stage.backgroundColor = '#88C070';
+    //SETTING UP THE BACKGROUND
+	game.stage.backgroundColor = '#88C070';
     //CREATING THE SHIP
     this.ship = game.add.sprite(game.width/2, game.height/2, 'ship');
     game.physics.enable(this.ship, Phaser.Physics.ARCADE);
@@ -68,7 +69,7 @@ const mainState = {
   },
 
   update: function () {
-    game.physics.arcade.overlap(this.bullets, this.aliens, this.hit, null, this);
+	game.physics.arcade.overlap(this.bullets, this.aliens, this.hit, null, this);
     game.physics.arcade.overlap(this.aliens, this.ship, this.shipGotHit, null, this);
     this.aliens.forEach(
       (alien) => {
@@ -174,16 +175,21 @@ const mainState = {
 
 const gameoverState = {
   preload: function () {
-    game.load.image('gameover', 'assets/gameover.jpg');
+    game.load.image('gameover', 'assets/gameover.png');
   },
   create: function () {
+	game.add.text(50, 50, "GAME OVER", { font: '72px Courier', fill: '#081820' });
     const gameOverImg = game.cache.getImage('gameover');
     game.add.sprite(
       game.world.centerX - gameOverImg.width / 2,
       game.world.centerY - gameOverImg.height / 2,
       'gameover');
     game.input.onDown.add(() => { game.state.start('main'); });
-  }
+	},
+	update: function(){
+		    game.camera.shake(0.05, 10000);	
+			
+	}
 };
 
 const game = new Phaser.Game(800, 600);
