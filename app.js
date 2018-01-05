@@ -92,7 +92,7 @@ const mainState = {
     this.boundries(this.ship);
     //FIRE GUN
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
-       this.fire(Math.random()/4);
+       this.fire(Math.random()/4 - 0.2);
 	}
   },
 
@@ -195,14 +195,13 @@ const gameoverState = {
       'gameover');
 	},
 	update: function(){
-		    game.camera.shake(0.005, game.time.now);	
+		    game.camera.shake(0.005 + i/5000, game.time.now);	
 			gameOverTime = (game.time.now - endTime);
 			
 			if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 				console.log(gameOverTime);
 				game.add.text(50 + i, 172, i/50 + 1, {font: "42px Courier", fill: "#081820"});
 				i += 50;
-				game.camera.shake(i/5000, game.time.now);
 					if(i >= 500){
 						game.state.start('main'); 
 					}
