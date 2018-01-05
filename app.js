@@ -6,10 +6,13 @@ const mainState = {
     game.load.image('bullet', 'assets/bullet.png');
     game.load.spritesheet('explode', 'assets/explode.png', 128, 128);
     game.load.audio('fire', 'assets/fire.mp3');
+	    game.load.script('BlurX', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurX.js');
+		game.load.script('BlurY', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurY.js');
   },
 
   create: function () {
-    //SETTING UP THE BACKGROUND
+	
+	//SETTING UP THE BACKGROUND
 	game.stage.backgroundColor = '#88C070';
     //CREATING THE SHIP
     this.ship = game.add.sprite(game.width/2, game.height/2, 'ship');
@@ -66,6 +69,7 @@ const mainState = {
 
     this.cursors = game.input.keyboard.createCursorKeys();
     game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
+			//FILTER FUN
   },
 
   update: function () {
@@ -135,6 +139,7 @@ const mainState = {
           bullet.rotation = this.ship.rotation;
           game.physics.arcade.velocityFromRotation(this.ship.rotation + angle, 1000, bullet.body.velocity);
           this.bulletTime = game.time.now + 150;
+
         }
       }
     },
@@ -169,27 +174,40 @@ const mainState = {
       localStorage.setItem('invadershighscore', this.highScore);
     }
     game.state.start('gameover');
+	endTime = game.time.now;
+	console.log(endTime);
   }
 }
 
-
 const gameoverState = {
+	
   preload: function () {
     game.load.image('gameover', 'assets/gameover.png');
   },
   create: function () {
+	 i = 0;
 	game.add.text(50, 50, "GAME OVER", { font: '72px Courier', fill: '#081820' });
+	game.add.text(50, 122, "Press Space to Continue", { font: '42px Courier', fill: '#081820' });
     const gameOverImg = game.cache.getImage('gameover');
     game.add.sprite(
       game.world.centerX - gameOverImg.width / 2,
       game.world.centerY - gameOverImg.height / 2,
       'gameover');
-    game.input.onDown.add(() => { game.state.start('main'); });
 	},
 	update: function(){
-		    game.camera.shake(0.05, 10000);	
+		    game.camera.shake(0.005, game.time.now);	
+			gameOverTime = (game.time.now - endTime);
 			
-	}
+			if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+				console.log(gameOverTime);
+				game.add.text(50 + i, 172, i/50 + 1, {font: "42px Courier", fill: "#081820"});
+				i += 50;
+				game.camera.shake(i/5000, game.time.now);
+					if(i >= 500){
+						game.state.start('main'); 
+					}
+			}	
+		},
 };
 
 const game = new Phaser.Game(800, 600);
