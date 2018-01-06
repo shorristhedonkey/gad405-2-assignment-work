@@ -7,7 +7,7 @@ const mainState = {
     game.load.spritesheet('explode', 'assets/explode.png', 128, 128);
     game.load.audio('fire', 'assets/fire.mp3');
 	game.load.audio('boom', 'assets/boom.mp3');
-	game.load.audio('lose', 'assets/explosion.mp3');
+	game.load.audio('lose', 'assets/Explosion.mp3');
   },
 
   create: function () {
@@ -61,10 +61,9 @@ const mainState = {
       localStorage.setItem('invadershighscore', 0);
       this.highScore = 0;
     }
-
     this.score = 0;
     this.scoreDisplay = game.add.text(50, 50, `Score: ${this.score} \nHighScore: ${this.highScore}`, { font: '16px Courier', fill: '#081820' });
-
+	//Setting up variables for explosion playback
     this.fireSound = game.add.audio('fire');
 	this.boom = game.add.audio('boom');
 	this.lose = game.add.audio('lose');
