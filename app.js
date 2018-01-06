@@ -164,7 +164,7 @@ const mainState = {
   },
 
   shipGotHit: function (alien, ship) {
-    this.lose.play()
+    this.lose.play();
 	this.explosion.reset(this.ship.x + (this.ship.width / 2), this.ship.y + (this.ship.height / 2));
     this.ship.kill();
     this.explosion.animations.play('boom');
