@@ -6,8 +6,8 @@ const mainState = {
     game.load.image('bullet', 'assets/bullet.png');
     game.load.spritesheet('explode', 'assets/explode.png', 128, 128);
     game.load.audio('fire', 'assets/fire.mp3');
-	    game.load.script('BlurX', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurX.js');
-		game.load.script('BlurY', 'https://cdn.rawgit.com/photonstorm/phaser/master/v2/filters/BlurY.js');
+	game.load.audio('boom', 'assets/boom.mp3');
+	game.load.audio('lose', 'assets/explosion.mp3');
   },
 
   create: function () {
@@ -66,10 +66,11 @@ const mainState = {
     this.scoreDisplay = game.add.text(50, 50, `Score: ${this.score} \nHighScore: ${this.highScore}`, { font: '16px Courier', fill: '#081820' });
 
     this.fireSound = game.add.audio('fire');
+	this.boom = game.add.audio('boom');
+	this.lose = game.add.audio('lose');
 
     this.cursors = game.input.keyboard.createCursorKeys();
     game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
-			//FILTER FUN
   },
 
   update: function () {
@@ -148,6 +149,7 @@ const mainState = {
     this.score = this.score + 10;
     bullet.kill();
     enemy.kill();
+	this.boom.play();
     game.camera.shake(0.02, 300);
     //Create new enemies
 	alienPos = (Math.random() * 800) + 1
@@ -162,7 +164,8 @@ const mainState = {
   },
 
   shipGotHit: function (alien, ship) {
-    this.explosion.reset(this.ship.x + (this.ship.width / 2), this.ship.y + (this.ship.height / 2));
+    this.lose.play()
+	this.explosion.reset(this.ship.x + (this.ship.width / 2), this.ship.y + (this.ship.height / 2));
     this.ship.kill();
     this.explosion.animations.play('boom');
     this.gameOver();
