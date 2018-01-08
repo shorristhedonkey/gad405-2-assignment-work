@@ -155,7 +155,7 @@ const mainState = {
     bullet.kill();
     enemy.kill();
 	this.boom.play();
-	game.camera.flash(0xffffff, 30);
+	game.camera.flash(0xffffff, 60);
     game.camera.shake(0.02, 300);
     //Create new enemies
 	alienPos = (Math.random() * 800) + 1
