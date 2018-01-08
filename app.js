@@ -11,6 +11,8 @@ const mainState = {
   },
 
   create: function () {
+	//SETTING THE WORLD BOUNDRIES
+	game.world.setBounds(0, 0, 1024, 600);
 	//ALLIGNING THE WINDOW TO CENTER
 	game.scale.pageAlignHorizontally = true;
 	//SETTING UP THE BACKGROUND
@@ -68,7 +70,9 @@ const mainState = {
     this.fireSound = game.add.audio('fire');
 	this.boom = game.add.audio('boom');
 	this.lose = game.add.audio('lose');
-
+	//SETTING UP THE CAMERA 
+	game.camera.follow(this.ship);
+	//SETTING UP THE INPUT METHODS
     this.cursors = game.input.keyboard.createCursorKeys();
     game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
   },
@@ -95,12 +99,13 @@ const mainState = {
     if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
        this.fire(Math.random()/4 - 0.2);
 	}
+
   },
 
   shipMove: function(){
     if (this.cursors.up.isDown){
 	  shipV = 400;
-      let  i = game.physics.arcade.accelerationFromRotation(this.ship.rotation, shipV, this.ship.body.acceleration);
+      game.physics.arcade.accelerationFromRotation(this.ship.rotation, shipV, this.ship.body.acceleration);
     }else{
 	  shipV = 0;
       this.ship.body.acceleration.set(shipV);
@@ -150,6 +155,7 @@ const mainState = {
     bullet.kill();
     enemy.kill();
 	this.boom.play();
+	game.camera.flash(0xffffff, 30);
     game.camera.shake(0.02, 300);
     //Create new enemies
 	alienPos = (Math.random() * 800) + 1
@@ -171,6 +177,7 @@ const mainState = {
     this.gameOver();
   },
 
+  
   gameOver: function () {
     if (this.score > this.highScore) {
       this.highScore = this.score;
