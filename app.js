@@ -8,6 +8,7 @@ const mainState = {
     game.load.audio('fire', 'assets/fire.mp3');
 	game.load.audio('boom', 'assets/boom.mp3');
 	game.load.audio('lose', 'assets/Explosion.mp3');
+	game.load.image('title', 'assets/title.png');
   },
 
   create: function () {
@@ -16,7 +17,13 @@ const mainState = {
 	//ALLIGNING THE WINDOW TO CENTER
 	game.scale.pageAlignHorizontally = true;
 	//SETTING UP THE BACKGROUND
-	game.stage.backgroundColor = '#88C070';
+	game.stage.backgroundColor = '#081820';
+	//CREATING THE TITLE
+    const title = game.cache.getImage('title');
+	game.add.sprite(
+      game.world.centerX - title.width / 2,
+      game.world.centerY - title.height / 2,
+      'title');
     //CREATING THE SHIP
     this.ship = game.add.sprite(game.width/2, game.height/2, 'ship');
     game.physics.enable(this.ship, Phaser.Physics.ARCADE);
@@ -65,7 +72,7 @@ const mainState = {
       this.highScore = 0;
     }
     this.score = 0;
-    this.scoreDisplay = game.add.text(50, 50, `Score: ${this.score} \nHighScore: ${this.highScore}`, { font: '16px Courier', fill: '#081820' });
+    this.scoreDisplay = game.add.text(50, 50, `Score: ${this.score} \nHighScore: ${this.highScore}`, { font: '16px Courier', fill: '#88C070' });
 	//Setting up variables for explosion playback
     this.fireSound = game.add.audio('fire');
 	this.boom = game.add.audio('boom');
@@ -196,8 +203,8 @@ const gameoverState = {
   },
   create: function () {
 	 i = 0;
-	game.add.text(50, 50, "GAME OVER", { font: '72px Courier', fill: '#081820' });
-	game.add.text(50, 122, "Press Space to Continue", { font: '42px Courier', fill: '#081820' });
+	game.add.text(50, 50, "GAME OVER", { font: '72px Courier', fill: '#88C070' });
+	game.add.text(50, 122, "Press Space to Continue", { font: '42px Courier', fill: '#88C070' });
     const gameOverImg = game.cache.getImage('gameover');
     game.add.sprite(
       game.world.centerX - gameOverImg.width / 2,
@@ -210,7 +217,7 @@ const gameoverState = {
 			
 			if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
 				console.log(gameOverTime);
-				game.add.text(50 + i, 172, i/50 + 1, {font: "42px Courier", fill: "#081820"});
+				game.add.text(50 + i, 172, i/50 + 1, {font: "42px Courier", fill: "#88C070"});
 				i += 50;
 					if(i >= 500){
 						game.state.start('main'); 
