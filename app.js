@@ -11,7 +11,8 @@ const mainState = {
   },
 
   create: function () {
-	
+	//ALLIGNING THE WINDOW TO CENTER
+	game.scale.pageAlignHorizontally = true;
 	//SETTING UP THE BACKGROUND
 	game.stage.backgroundColor = '#88C070';
     //CREATING THE SHIP
@@ -152,8 +153,8 @@ const mainState = {
     game.camera.shake(0.02, 300);
     //Create new enemies
 	alienPos = (Math.random() * 800) + 1
-    this.aliens.create(alienPos, -50, 'enemy');
-    this.aliens.create(alienPos, game.height, 'enemy')
+    this.aliens.create(alienPos, - 25, 'enemy');
+    this.aliens.create(alienPos, game.height + 25, 'enemy')
     //Check if game over
     if (this.aliens.countLiving() === 0) {
       this.score = this.score + 100;
@@ -211,7 +212,7 @@ const gameoverState = {
 		},
 };
 
-const game = new Phaser.Game(800, 600);
+const game = new Phaser.Game(1024, 600);
 game.state.add('main', mainState);
 game.state.add('gameover', gameoverState);
 game.state.start('main');
