@@ -8,16 +8,22 @@ const mainState = {
     game.load.audio('fire', 'assets/fire.mp3');
 	game.load.audio('boom', 'assets/boom.mp3');
 	game.load.audio('lose', 'assets/Explosion.mp3');
+	game.load.image('star', 'assets/star.png');
 	game.load.image('title', 'assets/title.png');
+	
   },
 
   create: function () {
 	//SETTING THE WORLD BOUNDRIES
-	game.world.setBounds(0, 0, 1024, 600);
+	game.world.setBounds(0, 0, 1034, 610);
 	//ALLIGNING THE WINDOW TO CENTER
 	game.scale.pageAlignHorizontally = true;
 	//SETTING UP THE BACKGROUND
 	game.stage.backgroundColor = '#081820';
+	//CREATING THE STARFIELD
+	for(let x = 0; x < 100; x ++){
+		game.add.sprite(Math.random() * game.width, Math.random() * game.height, "star");
+	}
 	//CREATING THE TITLE
     const title = game.cache.getImage('title');
 	game.add.sprite(
@@ -193,7 +199,7 @@ const mainState = {
     game.state.start('gameover');
 	endTime = game.time.now;
 	console.log(endTime);
-  }
+  },
 }
 
 const gameoverState = {
